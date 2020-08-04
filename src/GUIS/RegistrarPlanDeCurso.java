@@ -384,8 +384,10 @@ public class RegistrarPlanDeCurso extends javax.swing.JFrame {
                 @Override
                 public void propertyChange(PropertyChangeEvent e) {
                     Date tempDate = jDateChooserInicioTema.getDate();
-                    Calendar c = Calendar.getInstance(); 
-                    c.setTime(tempDate); 
+                    Calendar c = Calendar.getInstance();
+                    try {
+                        c.setTime(tempDate);
+                    } catch (NullPointerException ex) {}
                     c.add(Calendar.DATE, 1);
                     tempDate = c.getTime();
                     jDateChooserFinTema.getJCalendar().setMinSelectableDate(tempDate);
@@ -461,7 +463,7 @@ public class RegistrarPlanDeCurso extends javax.swing.JFrame {
             Tema tema = buscarTemaEnLista(nombreTema);
             String [] filaActividad = new String[2];
             int i = 0;
-            if (valueInCell == null) {
+            if (jLabelNombreTema.getText().equals("") || jLabelNombreTema.getText() == null) {
                 JOptionPane.showMessageDialog(this, "Seleccione el Tema correspondiente a su actividad");
             } else {
                 Actividad actividad = new Actividad();
@@ -476,6 +478,7 @@ public class RegistrarPlanDeCurso extends javax.swing.JFrame {
                     TablaActividades.addRow(filaActividad);
            }
             jTextFieldNombreActividad.setText("");
+            jLabelNombreTema.setText("");
         } else {
             JOptionPane.showMessageDialog(this, "No deje campos vacíos.");
         }

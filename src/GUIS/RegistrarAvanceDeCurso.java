@@ -15,6 +15,7 @@ import Dominio.Curso;
 import Dominio.Docente;
 import Dominio.PlanDeCurso;
 import Dominio.Tema;
+import LogicaDeNegocio.JTextAreaLimit;
 import LogicaDeNegocio.ValidacionesCurso;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
@@ -22,12 +23,16 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.swing.JComboBox;
 import javax.swing.JOptionPane;
 import javax.swing.JTable;
+import javax.swing.event.DocumentEvent;
+import javax.swing.event.DocumentListener;
 import javax.swing.table.DefaultTableModel;
+import javax.swing.text.AttributeSet;
+import javax.swing.text.BadLocationException;
+import javax.swing.text.DefaultStyledDocument;
+import javax.swing.text.PlainDocument;
 
 public class RegistrarAvanceDeCurso extends javax.swing.JFrame {
     
@@ -129,6 +134,8 @@ public class RegistrarAvanceDeCurso extends javax.swing.JFrame {
         jTableTemasRegistrados = new javax.swing.JTable();
         jScrollPane1 = new javax.swing.JScrollPane();
         jTableActividadesRegistradas = new javax.swing.JTable();
+        jLabel9 = new javax.swing.JLabel();
+        jLabel10 = new javax.swing.JLabel();
 
         jTableTemas1.setModel(TablaTemas);
         jTableTemas1.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
@@ -217,7 +224,10 @@ public class RegistrarAvanceDeCurso extends javax.swing.JFrame {
         getContentPane().add(jLabel5, new org.netbeans.lib.awtextra.AbsoluteConstraints(350, 500, -1, -1));
 
         jTextAreaObservacionesTema.setColumns(20);
+        jTextAreaObservacionesTema.setLineWrap(true);
         jTextAreaObservacionesTema.setRows(5);
+        jTextAreaObservacionesTema.setToolTipText("");
+        jTextAreaObservacionesTema.setWrapStyleWord(true);
         jScrollPane4.setViewportView(jTextAreaObservacionesTema);
 
         getContentPane().add(jScrollPane4, new org.netbeans.lib.awtextra.AbsoluteConstraints(340, 230, 280, -1));
@@ -267,6 +277,14 @@ public class RegistrarAvanceDeCurso extends javax.swing.JFrame {
 
         getContentPane().add(jScrollPane1, new org.netbeans.lib.awtextra.AbsoluteConstraints(50, 430, 260, 90));
 
+        jLabel9.setFont(new java.awt.Font("Arial", 1, 14)); // NOI18N
+        jLabel9.setText("%");
+        getContentPane().add(jLabel9, new org.netbeans.lib.awtextra.AbsoluteConstraints(450, 470, -1, 20));
+
+        jLabel10.setFont(new java.awt.Font("Arial", 1, 14)); // NOI18N
+        jLabel10.setText("%");
+        getContentPane().add(jLabel10, new org.netbeans.lib.awtextra.AbsoluteConstraints(440, 180, -1, 20));
+
         pack();
     }// </editor-fold>//GEN-END:initComponents
     /*    */
@@ -309,6 +327,7 @@ public class RegistrarAvanceDeCurso extends javax.swing.JFrame {
         dispose();
     } 
     
+    
     void configurarGUI() {
         TablaTemas.setColumnIdentifiers(titulosTemas);
         TablaActividades.setColumnIdentifiers(titulosActividades);
@@ -323,6 +342,8 @@ public class RegistrarAvanceDeCurso extends javax.swing.JFrame {
         jTableActividadesRegistradas.getTableHeader().setReorderingAllowed(false);
         jTableActividadesRegistradas.setDefaultEditor(Object.class, null);
         jLabel2.setText(nombreCurso);
+        jTextAreaObservacionesTema.setDocument(new JTextAreaLimit(254));
+        jTextAreaObservacionesActividad.setDocument(new JTextAreaLimit(254));
         mostrarTemas();
         mostrarActividades();
     }
@@ -458,25 +479,53 @@ public class RegistrarAvanceDeCurso extends javax.swing.JFrame {
     }
     
     void guardarTemaEnLista() throws InterruptedException {
+        ValidacionesCurso validarCampos = new ValidacionesCurso();
         Tema temaTemporal = new Tema();
-        temaTemporal = tema;
-        temaTemporal.setObservaciones(jTextAreaObservacionesTema.getText());
-        temaTemporal.setPorcentajeAvance(jTextFieldPorcentajeTema.getText());
-        listaTemasRegistrados.add(temaTemporal);
-        jTextFieldPorcentajeTema.setText("");
-        jTextAreaObservacionesTema.setText("");
-        JOptionPane.showMessageDialog(this, "Tema actualizado y agregado a lista de registro.");
+        if(jLabelNombreTema.getText().equals("") || jLabelNombreTema.getText() == null) {
+            JOptionPane.showMessageDialog(this, "No ha seleccionado ningún tema.");
+        } else {
+            if (!jTextFieldPorcentajeTema.getText().isEmpty() && !jTextAreaObservacionesTema.getText().isEmpty()) {
+                temaTemporal = tema;
+                temaTemporal.setObservaciones(jTextAreaObservacionesTema.getText());
+                temaTemporal.setPorcentajeAvance(jTextFieldPorcentajeTema.getText());
+                if (validarCampos.validarPorcentaje(jTextFieldPorcentajeTema.getText())) {
+                    listaTemasRegistrados.add(temaTemporal);
+                    jTextFieldPorcentajeTema.setText("");
+                    jTextAreaObservacionesTema.setText("");
+                    jLabelNombreTema.setText("");
+                    JOptionPane.showMessageDialog(this, "Tema actualizado y agregado a lista de registro.");
+                } else {
+                    JOptionPane.showMessageDialog(this, "Introduzca valor de porcentaje 0 - 100.");
+                }
+            } else {
+                JOptionPane.showMessageDialog(this, "No deje campos vacíos.");
+            }
+        }
     }
     
     void guardarActividadEnLista() {
-        Actividad actividadTemporal = new Actividad();
-        actividadTemporal = actividad;
-        actividadTemporal.setObservaciones(jTextAreaObservacionesActividad.getText());
-        actividadTemporal.setPorcentajeAvance(jTextFieldPorcentajeActividad.getText());
-        listaActividadesRegistradas.add(actividadTemporal);
-        jTextFieldPorcentajeActividad.setText("");
-        jTextAreaObservacionesActividad.setText("");
-        JOptionPane.showMessageDialog(this, "Tema actualizado y agregado a lista de registro.");
+        ValidacionesCurso validarCampos = new ValidacionesCurso();
+        if(jLabelNombreActividad.getText().equals("") || jLabelNombreActividad.getText() == null) {
+            JOptionPane.showMessageDialog(this, "No ha seleccionado ninguna actividad.");
+        } else {
+            if (!jTextFieldPorcentajeActividad.getText().isEmpty() && !jTextAreaObservacionesActividad.getText().isEmpty()) {
+                JOptionPane.showMessageDialog(this, "Favor de no dejar campos vacíos.");
+            } else {
+                Actividad actividadTemporal = new Actividad();
+                actividadTemporal = actividad;
+                actividadTemporal.setObservaciones(jTextAreaObservacionesActividad.getText());
+                if (validarCampos.validarPorcentaje(jTextFieldPorcentajeActividad.getText())) {
+                    actividadTemporal.setPorcentajeAvance(jTextFieldPorcentajeActividad.getText());
+                    listaActividadesRegistradas.add(actividadTemporal);
+                    jTextFieldPorcentajeActividad.setText("");
+                    jTextAreaObservacionesActividad.setText("");
+                    jLabelNombreActividad.setText("");
+                    JOptionPane.showMessageDialog(this, "Tema actualizado y agregado a lista de registro.");
+                } else {
+                JOptionPane.showMessageDialog(this, "Introduzca valor de porcentaje 0 - 100.");
+                }
+            }
+        }
     } 
     
     AvanceDeCurso llenarAvanceDeCurso() {
@@ -500,7 +549,7 @@ public class RegistrarAvanceDeCurso extends javax.swing.JFrame {
             JOptionPane.showMessageDialog(this, "Favor de no dejar campos vacíos");
             camposValidos = false;
         }
-     return camposValidos;   
+        return camposValidos;   
     }
     
     void registrarTema() {
@@ -590,6 +639,7 @@ public class RegistrarAvanceDeCurso extends javax.swing.JFrame {
     private javax.swing.JButton jButtonRegistrarTema;
     private com.toedter.calendar.JDateChooser jDateChooser1;
     private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel jLabel10;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
@@ -597,6 +647,7 @@ public class RegistrarAvanceDeCurso extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel6;
     private javax.swing.JLabel jLabel7;
     private javax.swing.JLabel jLabel8;
+    private javax.swing.JLabel jLabel9;
     private javax.swing.JLabel jLabelActividadesRealizadas;
     private javax.swing.JLabel jLabelFechaAvance;
     private javax.swing.JLabel jLabelNombreActividad;
