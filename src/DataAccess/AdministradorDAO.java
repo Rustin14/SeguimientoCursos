@@ -25,7 +25,7 @@ public class AdministradorDAO {
         results = statement.executeQuery();
         while (results.next()) {
             admin = new Administrador();
-            admin.setNombre(results.getString("nombreAdmin"));
+            admin.setNombre(results.getString("nombre"));            
             admin.setCorreo(results.getString("correo"));
             admin.setContraseña(results.getString("contraseña"));
             todosLosDocentes.add(admin);

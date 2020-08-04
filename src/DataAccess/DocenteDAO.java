@@ -46,30 +46,26 @@ public class DocenteDAO implements IDocenteDAO {
         statement.executeUpdate();
     }
     
-    @Override
+      @Override
     public ArrayList<Docente> leerTodosLosDocentes() throws SQLException, ClassNotFoundException {
-        connection = connectDB.getConnection();
+        Connection connection = connectDB.getConnection();
         Docente docente = null;
         ArrayList<Docente> todosLosDocentes = new ArrayList<Docente>();
         String query = "SELECT * FROM docente";
-        PreparedStatement statement = connection.prepareStatement(query);
-        results = statement.executeQuery();
+        PreparedStatement sentence = connection.prepareStatement(query);
+        results = sentence.executeQuery();
         while (results.next()) {
             docente = new Docente();
             docente.setNumPersonal(results.getString("numeroDePersonal"));
             docente.setNombre(results.getString("nombre"));
-            docente.setApellidoMaterno(results.getString("apellidoMaterno"));
-            docente.setApellidoPaterno(results.getString("apellidoPaterno"));
             docente.setCurp(results.getString("curp"));
-            docente.setRfc(results.getString("rfc"));
-            docente.setSexo(results.getString("Genero"));
             docente.setCorreo(results.getString("correo"));
             docente.setContraseña(results.getString("contraseña"));
             todosLosDocentes.add(docente);
         }
+        connectDB.closeConnection();
         return todosLosDocentes;
     }
-    
     
     
     

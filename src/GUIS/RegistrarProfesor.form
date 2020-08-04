@@ -121,7 +121,7 @@
         <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
           <Font name="Arial" size="18" style="1"/>
         </Property>
-        <Property name="text" type="java.lang.String" value="Genero :"/>
+        <Property name="text" type="java.lang.String" value="G&#xe9;nero :"/>
       </Properties>
       <Constraints>
         <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.DesignAbsoluteLayout" value="org.netbeans.modules.form.compat2.layouts.DesignAbsoluteLayout$AbsoluteConstraintsDescription">
@@ -271,7 +271,7 @@
     </Component>
     <Component class="javax.swing.JTextField" name="jTextFieldFechaNacimiento">
       <Properties>
-        <Property name="text" type="java.lang.String" value="D&#xed;a - Mes - A&#xf1;o"/>
+        <Property name="text" type="java.lang.String" value="d&#xed;a/mes/a&#xf1;o"/>
       </Properties>
       <Constraints>
         <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.DesignAbsoluteLayout" value="org.netbeans.modules.form.compat2.layouts.DesignAbsoluteLayout$AbsoluteConstraintsDescription">

@@ -3,14 +3,8 @@
 */
 package GUIS;
 
-import DataAccess.DocenteDAO;
+
 import Dominio.Administrador;
-import Dominio.Docente;
-import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.swing.JOptionPane;
 
 public class VentanaPrincipalAdministrador extends javax.swing.JFrame {
@@ -22,7 +16,7 @@ public class VentanaPrincipalAdministrador extends javax.swing.JFrame {
         this.setLocationRelativeTo(null);
         this.setTitle("Pantalla inicial Administrador");
         this.admin = administrador;
-        jLabelNombreAdmin.setText(admin.getNombre());
+        jLabelNombreAdmins.setText(admin.getNombre());
     }
     
     public VentanaPrincipalAdministrador() {
@@ -42,8 +36,9 @@ public class VentanaPrincipalAdministrador extends javax.swing.JFrame {
         jButtonEliminarCoordinador = new javax.swing.JButton();
         jButtonEliminarProfesor = new javax.swing.JButton();
         jButtonCerrarSesion = new javax.swing.JButton();
-        jLabel1 = new javax.swing.JLabel();
+        jLabelNombreAdmins = new javax.swing.JLabel();
         jLabelNombreAdmin = new javax.swing.JLabel();
+        jLabel1 = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setBackground(new java.awt.Color(204, 255, 204));
@@ -127,26 +122,31 @@ public class VentanaPrincipalAdministrador extends javax.swing.JFrame {
         getContentPane().add(jButtonEliminarProfesor, new org.netbeans.lib.awtextra.AbsoluteConstraints(370, 350, 210, 60));
 
         jButtonCerrarSesion.setFont(new java.awt.Font("Arial", 1, 14)); // NOI18N
-        jButtonCerrarSesion.setText("Salir");
+        jButtonCerrarSesion.setText("cerrar sesión");
         jButtonCerrarSesion.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButtonCerrarSesionActionPerformed(evt);
             }
         });
-        getContentPane().add(jButtonCerrarSesion, new org.netbeans.lib.awtextra.AbsoluteConstraints(550, 440, -1, 30));
+        getContentPane().add(jButtonCerrarSesion, new org.netbeans.lib.awtextra.AbsoluteConstraints(500, 420, -1, 30));
 
-        jLabel1.setFont(new java.awt.Font("Arial", 1, 14)); // NOI18N
-        jLabel1.setText("Nombre del Administrador: ");
-        getContentPane().add(jLabel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 70, -1, -1));
+        jLabelNombreAdmins.setFont(new java.awt.Font("Arial", 1, 14)); // NOI18N
+        jLabelNombreAdmins.setText("Nombre del Administrador: ");
+        getContentPane().add(jLabelNombreAdmins, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 70, -1, -1));
 
         jLabelNombreAdmin.setFont(new java.awt.Font("Arial", 1, 14)); // NOI18N
         getContentPane().add(jLabelNombreAdmin, new org.netbeans.lib.awtextra.AbsoluteConstraints(230, 70, -1, -1));
+
+        jLabel1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Imagenes/Fondo.jpg"))); // NOI18N
+        getContentPane().add(jLabel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, -1, 460));
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
     private void jButtonRegistrarProfesorActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonRegistrarProfesorActionPerformed
-        obtenerTodosLosProfesores();
+      RegistrarProfesor irARegistrar = new RegistrarProfesor();
+      irARegistrar.setVisible(true);
+      dispose();
     }//GEN-LAST:event_jButtonRegistrarProfesorActionPerformed
 
     private void jButtonRegistraDirectrActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonRegistraDirectrActionPerformed
@@ -183,35 +183,7 @@ public class VentanaPrincipalAdministrador extends javax.swing.JFrame {
        setVisible(false);
     }//GEN-LAST:event_jButtonCerrarSesionActionPerformed
 
-    ArrayList <Docente> todosLosDocentes = new ArrayList();
-        
-    public void obtenerTodosLosProfesores(){
-        DocenteDAO docente = new DocenteDAO();
-        try {
-            todosLosDocentes = docente.leerTodosLosDocentes();
-            validarPrecondiciones(todosLosDocentes);
-        } catch (SQLException | ClassNotFoundException ex) {
-            JOptionPane.showMessageDialog(this, "No se pudo acceder a la base de datos, intente más tarde");
-            Logger.getLogger(VentanaPrincipalAdministrador.class.getName()).log(Level.SEVERE, null, ex);
-        } catch(NullPointerException ex2){
-            JOptionPane.showMessageDialog(this, "se esta accediendo a una posicion invalida");
-            Logger.getLogger(VentanaPrincipalAdministrador.class.getName()).log(Level.SEVERE, null, ex2);
-        }
-    }
-    void validarPrecondiciones(ArrayList<Docente> todosLosDocentes){
-      int numeroMaximoDeProfesores = 2;
-      if(todosLosDocentes.size() < numeroMaximoDeProfesores){
-        RegistrarProfesor irARegistrarProfesor = new RegistrarProfesor();
-        irARegistrarProfesor.setVisible(true);
-        dispose();
-      }else{
-         JOptionPane.showMessageDialog(this, "Ya existen dos profesores registrados, para registrar otro"
-                 + "  elimine alguno");
-      }
-        
-    }
-    
-    public static void main(String args[]) {
+        public static void main(String args[]) {
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
                 new VentanaPrincipalAdministrador().setVisible(true);
@@ -231,6 +203,7 @@ public class VentanaPrincipalAdministrador extends javax.swing.JFrame {
     private javax.swing.JButton jButtonRegistrarProfesor;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabelNombreAdmin;
+    private javax.swing.JLabel jLabelNombreAdmins;
     private javax.swing.JLabel jLabelTitle;
     // End of variables declaration//GEN-END:variables
 }

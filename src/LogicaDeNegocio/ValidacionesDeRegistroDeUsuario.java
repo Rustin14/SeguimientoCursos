@@ -47,13 +47,16 @@ public class ValidacionesDeRegistroDeUsuario {
                 + "[0-9]{1,}[(A-ZÑ)(a-zñ)(/)(.)(#)]{0,16}");
     }
     
-    SimpleDateFormat format = new SimpleDateFormat("dd-mm-yyyy");
+    
     public boolean validarFecha(String fecha){
         try{
+            SimpleDateFormat format = new SimpleDateFormat("dd/MM/yyyy");
+            format.setLenient(false);
             format.parse(fecha);
-            return true;
+            
         }catch(ParseException e){
             return false;
         }
+        return true;
     }
 }
